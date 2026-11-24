@@ -1,0 +1,33 @@
+{
+  "name": "farmpool-frontend",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "test:scene": "tsx lib/scene.test.ts"
+  },
+  "dependencies": {
+    "next": "14.2.35",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "recharts": "2.12.7",
+    "leaflet": "1.9.4",
+    "react-leaflet": "4.2.1",
+    "three": "0.169.0",
+    "@react-three/fiber": "8.17.10",
+    "@react-three/drei": "9.114.3"
+  },
+  "devDependencies": {
+    "typescript": "5.5.4",
+    "@types/node": "20.14.15",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "@types/leaflet": "1.9.12",
+    "tailwindcss": "3.4.10",
+    "postcss": "8.4.41",
+    "autoprefixer": "10.4.20",
+    "@types/three": "0.169.0",
+    "tsx": "4.19.1"
+  }
+}

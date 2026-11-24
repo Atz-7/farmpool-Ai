@@ -1,0 +1,17 @@
+{
+  "name": "FarmPool AI - Rural Mandi & Farmer Pooling",
+  "short_name": "FarmPool",
+  "description": "Connecting farmers and buyers with offline pooling and voice support",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf6ef",
+  "theme_color": "#1b6928",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

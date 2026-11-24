@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <circle cx="256" cy="256" r="240" fill="#1b6928" />
+  <circle cx="256" cy="256" r="225" fill="#2e7d32" stroke="#faf6ef" stroke-width="8"/>
+  <path d="M120 360 Q 256 310 392 360 L 392 420 Q 256 460 120 420 Z" fill="#8d5b4c" />
+  <!-- Sprout / Plant -->
+  <path d="M256 340 L 256 160" stroke="#faf6ef" stroke-width="16" stroke-linecap="round"/>
+  <path d="M256 240 C 220 200 160 210 150 250 C 180 270 230 260 256 240 Z" fill="#86efac" stroke="#faf6ef" stroke-width="4"/>
+  <path d="M256 200 C 290 160 350 170 360 210 C 330 230 280 220 256 200 Z" fill="#bbf7d0" stroke="#faf6ef" stroke-width="4"/>
+  <circle cx="256" cy="140" r="24" fill="#facc15" />
+</svg>

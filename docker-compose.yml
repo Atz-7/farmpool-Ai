@@ -1,0 +1,9 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_USER: farmpool
+      POSTGRES_PASSWORD: farmpool
+      POSTGRES_DB: farmpool
+    ports: ["5432:5432"]
+    volumes: ["./db/init.sql:/docker-entrypoint-initdb.d/init.sql"]
