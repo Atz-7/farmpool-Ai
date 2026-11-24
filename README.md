@@ -10,6 +10,8 @@ FarmPool AI starts from what a **buyer needs**, not from a farmer's listing. It 
 
 > ⚠️ **Demo project.** All farmers, buyers, mandi prices and payouts are **synthetic demo data**. There is no live e-NAM, government or payment integration. Earnings are estimates only.
 
+**🔗 Live demo: https://farmpool-ai.vercel.app/
+*(Backend runs on a free tier. The first load may take about 50 seconds to wake up.)*
 ---
 
 ## The problem
