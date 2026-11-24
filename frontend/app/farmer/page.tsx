@@ -123,6 +123,7 @@ export default function Farmer() {
     setErr("");
     setSuccessMsg("");
     try {
+      const requestId = "req_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
       await api("/listings", {
         body: {
           crop: f.crop,
@@ -130,6 +131,8 @@ export default function Farmer() {
           quality: f.quality,
           harvest_date: f.harvest_date,
           preferred_sell_date: f.preferred_sell_date || null,
+          client_request_id: requestId,
+          source: navigator.onLine ? "smartphone" : "offline",
         },
       });
 
@@ -196,6 +199,23 @@ export default function Farmer() {
                 ? "একা মণ্ডিতে যাওয়ার খরচ বাঁচান — প্রতিবেশীদের সাথে একসাথে বড় ক্রেতাকে বিক্রি করুন।"
                 : "Save transport costs by pooling with nearby farmers to sell directly to bulk buyers."}
             </p>
+
+            {/* Access Channels Bar */}
+            <div className="mt-4 flex flex-wrap items-center gap-2 pt-3 border-t border-white/20 text-xs">
+              <span className="font-bold text-green-200">अन्य माध्यम:</span>
+              <Link href="/ivr" className="rounded-xl bg-white/20 hover:bg-white/30 px-3 py-1 font-bold text-white transition flex items-center gap-1">
+                <span>📞</span>
+                <span>कीपैड IVR कॉल</span>
+              </Link>
+              <Link href="/coordinator" className="rounded-xl bg-white/20 hover:bg-white/30 px-3 py-1 font-bold text-white transition flex items-center gap-1">
+                <span>🤝</span>
+                <span>ग्राम समन्वयक</span>
+              </Link>
+              <Link href="/notifications" className="rounded-xl bg-white/20 hover:bg-white/30 px-3 py-1 font-bold text-white transition flex items-center gap-1">
+                <span>✉️</span>
+                <span>एसएमएस अलर्ट</span>
+              </Link>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <AudioGuideBtn text={audioIntro} lang={lang} />
@@ -462,6 +482,21 @@ export default function Farmer() {
                           <span className="rounded-full bg-stone-100 px-2 py-0.5 text-xs font-semibold text-stone-700">
                             ग्रेड {l.quality}
                           </span>
+                          {l.source === "ivr" && (
+                            <span className="rounded-full bg-emerald-100 text-emerald-800 px-2 py-0.5 text-xs font-bold flex items-center gap-1">
+                              📞 IVR कॉल से
+                            </span>
+                          )}
+                          {l.source === "coordinator" && (
+                            <span className="rounded-full bg-amber-100 text-amber-800 px-2 py-0.5 text-xs font-bold flex items-center gap-1">
+                              🤝 समन्वयक द्वारा
+                            </span>
+                          )}
+                          {l.source === "offline" && (
+                            <span className="rounded-full bg-sky-100 text-sky-800 px-2 py-0.5 text-xs font-bold flex items-center gap-1">
+                              📡 ऑफलाइन सिंक
+                            </span>
+                          )}
                           {l.is_offline && (
                             <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800">
                               ⏳ फोन में सुरक्षित (सिंक बाकी)

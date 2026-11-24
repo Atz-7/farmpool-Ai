@@ -119,6 +119,153 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* FARMPOOL AI IS FOR EVERY FARMER (Four Access Channels) */}
+      <section className="space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full bg-green-100 text-green-900 px-3 py-1 text-xs font-black mb-1">
+              <span>🌾 समावेशी कृषि मंच (Inclusive AgriTech)</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-black text-soil-700 tracking-tight">
+              FarmPool AI is for Every Farmer.
+            </h2>
+            <p className="text-sm text-stone-600 font-medium mt-1">
+              {lang === "hi"
+                ? "तकनीक को किसान के अनुसार ढलना चाहिए, किसान को तकनीक के अनुसार नहीं। चाहे स्मार्टफोन हो, कीपैड फोन हो या इंटरनेट न हो — हर किसान समूह बिक्री में भाग ले सकता है।"
+                : lang === "bn"
+                ? "প্রযুক্তিকে কৃষকের সাথে মানিয়ে নিতে হবে, কৃষককে প্রযুক্তির সাথে নয়। স্মার্টফোন থাকুক বা বেসিক ফোন — প্রতিটি কৃষক যৌথ বিক্রয়ে অংশ নিতে পারে।"
+                : "The technology should adapt to the farmer, not force the farmer to adapt to the technology. Four inclusive access channels connecting all farmers to collective markets."}
+            </p>
+          </div>
+          <AudioGuideBtn
+            text={
+              lang === "hi"
+                ? "फार्मपूल एआई हर किसान के लिए है। चार रास्ते: पहला, स्मार्टफोन ऐप। दूसरा, साधारण कीपैड फोन के लिए आईवीआर वॉयस कॉल। तीसरा, बिना फोन वाले किसानों के लिए ग्राम समन्वयक। चौथा, खेत में बिना इंटरनेट भी काम करने वाला ऑफलाइन मोड।"
+                : "FarmPool AI is for every farmer: Smartphone App, Keypad Phone IVR, Village Coordinator, and Offline-first access."
+            }
+            lang={lang}
+          />
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Channel 1: Smartphone App */}
+          <Link
+            href="/farmer"
+            className="rural-card p-5 flex flex-col justify-between hover:border-green-600 transition group border-2 border-green-200 bg-white"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-100 text-2xl group-hover:scale-110 transition">
+                  📱
+                </span>
+                <span className="rounded-full bg-green-100 px-2.5 py-0.5 text-[10px] font-black text-green-800">
+                  चैनल 1
+                </span>
+              </div>
+              <h3 className="font-black text-stone-900 text-lg">
+                {lang === "hi" ? "स्मार्टफोन ऐप (Smartphone App)" : "Smartphone App"}
+              </h3>
+              <p className="mt-2 text-xs text-stone-600 leading-relaxed font-medium">
+                {lang === "hi"
+                  ? "टचस्क्रीन डैशबोर्ड, बोलकर फसल दर्ज करना, 3D पिकअप रूट और मंडी मुनाफा कैलकुलेटर।"
+                  : "Touchscreen dashboard, spoken voice listing, 3D route inspection & net take-home simulator."}
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between text-xs font-black text-green-700 group-hover:translate-x-1 transition">
+              <span>डैशबोर्ड खोलें</span>
+              <span>→</span>
+            </div>
+          </Link>
+
+          {/* Channel 2: Basic Phone / IVR */}
+          <Link
+            href="/ivr"
+            className="rural-card p-5 flex flex-col justify-between hover:border-emerald-600 transition group border-2 border-emerald-300 bg-emerald-50/30"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-2xl group-hover:scale-110 transition">
+                  📞
+                </span>
+                <span className="rounded-full bg-emerald-200 px-2.5 py-0.5 text-[10px] font-black text-emerald-900">
+                  चैनल 2
+                </span>
+              </div>
+              <h3 className="font-black text-stone-900 text-lg">
+                {lang === "hi" ? "कीपैड फोन (Basic Phone / IVR)" : "Basic Phone / IVR"}
+              </h3>
+              <p className="mt-2 text-xs text-stone-600 leading-relaxed font-medium">
+                {lang === "hi"
+                  ? "बिना इंटरनेट किसी भी फोन से कॉल करें। बांग्ला, हिंदी व अंग्रेजी में वॉयस मेनू और कीपैड से फसल दर्ज करें।"
+                  : "Zero-internet interactive voice response. DTMF keypad menus in Bengali, Hindi & English."}
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-emerald-100 flex items-center justify-between text-xs font-black text-emerald-800 group-hover:translate-x-1 transition">
+              <span>IVR सिम्युलेटर चलाएं</span>
+              <span>→</span>
+            </div>
+          </Link>
+
+          {/* Channel 3: Village Coordinator */}
+          <Link
+            href="/coordinator"
+            className="rural-card p-5 flex flex-col justify-between hover:border-amber-600 transition group border-2 border-amber-300 bg-amber-50/30"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-100 text-2xl group-hover:scale-110 transition">
+                  🤝
+                </span>
+                <span className="rounded-full bg-amber-200 px-2.5 py-0.5 text-[10px] font-black text-amber-900">
+                  चैनल 3
+                </span>
+              </div>
+              <h3 className="font-black text-stone-900 text-lg">
+                {lang === "hi" ? "ग्राम समन्वयक (Village Coordinator)" : "Village Coordinator"}
+              </h3>
+              <p className="mt-2 text-xs text-stone-600 leading-relaxed font-medium">
+                {lang === "hi"
+                  ? "डिजिटल रूप से वंचित या बिना फोन वाले किसानों के खेत पर जाकर समन्वयक फसल और मौखिक सहमति दर्ज करता है।"
+                  : "Human digital facilitator assisting non-digital farmers with in-person onboarding & verbal consent."}
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-amber-100 flex items-center justify-between text-xs font-black text-amber-800 group-hover:translate-x-1 transition">
+              <span>समन्वयक पोर्टल खोलें</span>
+              <span>→</span>
+            </div>
+          </Link>
+
+          {/* Channel 4: Offline Access */}
+          <Link
+            href="/farmer"
+            className="rural-card p-5 flex flex-col justify-between hover:border-sky-600 transition group border-2 border-sky-200 bg-sky-50/30"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-100 text-2xl group-hover:scale-110 transition">
+                  📡
+                </span>
+                <span className="rounded-full bg-sky-200 px-2.5 py-0.5 text-[10px] font-black text-sky-900">
+                  चैनल 4
+                </span>
+              </div>
+              <h3 className="font-black text-stone-900 text-lg">
+                {lang === "hi" ? "ऑफलाइन मोड (Offline Access)" : "Offline Access"}
+              </h3>
+              <p className="mt-2 text-xs text-stone-600 leading-relaxed font-medium">
+                {lang === "hi"
+                  ? "खेत में जीरो सिग्नल होने पर भी फसल फोन में सुरक्षित दर्ज होती है। नेटवर्क आते ही स्वचालित सिंक।"
+                  : "Complete PWA field resilience. Locally queued harvest listings with automatic deduplication sync."}
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-sky-100 flex items-center justify-between text-xs font-black text-sky-800 group-hover:translate-x-1 transition">
+              <span>ऑफलाइन फीचर देखें</span>
+              <span>→</span>
+            </div>
+          </Link>
+        </div>
+      </section>
+
       {/* Quick Visual Role Selectors */}
       <section className="grid gap-4 sm:grid-cols-2">
         <Link

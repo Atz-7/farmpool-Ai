@@ -16,7 +16,7 @@ const RouteMap = dynamic(() => import("@/components/RouteMap"), { ssr: false, lo
 
 export default function Pool() {
   const { id } = useParams<{ id: string }>();
-  const s = useRole(["farmer", "buyer", "admin"]);
+  const s = useRole(["farmer", "buyer", "admin", "coordinator"]);
   const pool = useLoad<J>(s ? `/pools/${id}` : null);
   const profit = useLoad<J>(s ? `/pools/${id}/profit` : null);
   const route = useLoad<J>(s ? `/pools/${id}/route` : null);

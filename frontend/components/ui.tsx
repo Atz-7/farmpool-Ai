@@ -96,12 +96,16 @@ export const Loading = () => (
   </div>
 );
 
-export const Badge = ({ children }: { children: ReactNode }) => (
-  <span className="inline-flex items-center rounded-full bg-green-100 border border-green-300 px-3 py-1 text-xs font-bold text-green-900">
-    {children}
-  </span>
-);
-
+export const Badge = ({ children, color }: { children: ReactNode; color?: "amber" | "green" | "red" | "blue" | string }) => {
+  const tones: Record<string, string> = {
+    amber: "bg-amber-100 text-amber-800",
+    green: "bg-green-100 text-green-800",
+    red: "bg-red-100 text-red-800",
+    blue: "bg-blue-100 text-blue-800",
+  };
+  const tone = (color && tones[color]) || "bg-brand-100 text-brand-700";
+  return <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${tone}`}>{children}</span>;
+};
 export const Demo = () => (
   <span className="inline-flex items-center rounded-lg bg-amber-100 border border-amber-300 px-2 py-0.5 text-xs font-bold text-amber-900">
     डेमो डेटा (DEMO)

@@ -18,6 +18,15 @@ const DEMOS = [
     color: "border-green-600 bg-green-50/50 hover:bg-green-100/50",
   },
   {
+    role: "coordinator",
+    titleHi: "ग्राम समन्वयक (Village Coordinator)",
+    name: "हरीश कुमार (हुगली क्लस्टर)",
+    phone: "9000000099",
+    pw: "coord123",
+    icon: "🤝",
+    color: "border-orange-600 bg-orange-50/50 hover:bg-orange-100/50",
+  },
+  {
     role: "buyer",
     titleHi: "थोक खरीदार (Buyer)",
     name: "कोलकाता फ्रेश रिटेल",
@@ -61,7 +70,7 @@ export default function Login() {
       router.push(`/${t.role}`);
     } catch {
       // If offline or backend unreachable, allow demo access directly!
-      const role = fallbackRole || (u.startsWith("90000001") ? "buyer" : u.startsWith("9999") ? "admin" : "farmer");
+      const role = fallbackRole || (u.startsWith("9000000099") ? "coordinator" : u.startsWith("90000001") ? "buyer" : u.startsWith("9999") ? "admin" : "farmer");
       setSession({ token: "offline-demo-token", role: role as any });
       router.push(`/${role}`);
     } finally {

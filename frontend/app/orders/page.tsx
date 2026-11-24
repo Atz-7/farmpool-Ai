@@ -10,7 +10,7 @@ import AudioGuideBtn from "@/components/AudioGuideBtn";
 import { getLang, Lang } from "@/lib/i18n";
 
 export default function Orders() {
-  const s = useRole(["farmer", "buyer", "admin"]);
+  const s = useRole(["farmer", "buyer", "admin", "coordinator"]);
   const o = useLoad<J[]>(s ? "/orders" : null);
   const [err, setErr] = useState("");
   const [lang, setL] = useState<Lang>("hi");

@@ -62,15 +62,40 @@ export default function Nav() {
           </Link>
         </div>
 
-        {/* Right Navigation & Language Switcher */}
-        <div className="flex items-center gap-3 sm:gap-4 text-sm font-bold">
+        {/* Right Navigation & Access Channel Shortcuts */}
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm font-bold">
+          <Link
+            href="/ivr"
+            className="rounded-xl px-2.5 py-1.5 text-stone-700 hover:bg-stone-100 transition flex items-center gap-1 border border-stone-200"
+            title="Feature Phone IVR Simulation"
+          >
+            <span>📞</span>
+            <span className="hidden md:inline">IVR कॉल</span>
+          </Link>
+          <Link
+            href="/coordinator"
+            className="rounded-xl px-2.5 py-1.5 text-stone-700 hover:bg-stone-100 transition flex items-center gap-1 border border-stone-200"
+            title="Village Coordinator Portal"
+          >
+            <span>🤝</span>
+            <span className="hidden md:inline">समन्वयक</span>
+          </Link>
+          <Link
+            href="/notifications"
+            className="rounded-xl px-2.5 py-1.5 text-stone-700 hover:bg-stone-100 transition flex items-center gap-1 border border-stone-200"
+            title="SMS & Voice Notification Simulation"
+          >
+            <span>✉️</span>
+            <span className="hidden md:inline">एसएमएस</span>
+          </Link>
+
           <LanguageSelector />
 
           {s ? (
             <>
               <Link
                 href={`/${s.role}`}
-                className="rounded-xl px-3 py-1.5 text-stone-700 hover:bg-stone-100 transition"
+                className="rounded-xl bg-stone-100 px-3 py-1.5 text-stone-900 hover:bg-stone-200 transition font-black"
               >
                 {t("dashboard", lang)}
               </Link>
