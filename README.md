@@ -18,6 +18,7 @@ FarmPool AI starts from what a **buyer needs**, not from a farmer's listing. It 
 **🔗 Video Link: https://drive.google.com/file/d/1cyn23wRaS6oOThJaFmRacQiO8Mc8gc9f/view?usp=sharing
 
 **🔗 Medium Post: https://medium.com/@shagunshaw2006/farmpool-ai-turning-individual-harvests-into-collective-market-power-6857e7d3f89c
+
 ---
 
 ## The problem
