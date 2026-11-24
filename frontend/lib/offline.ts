@@ -64,6 +64,28 @@ export const SEED_OFFLINE_DATA: Record<string, unknown> = {
   ],
   "/orders": [
     { shipment_id: 1, order_id: 101, crop: "tomato", kg: 1000, status: "Confirmed" }
+  ],
+  "/coordinator/summary": {
+    coordinator_name: "Harish Kumar (Coordinator)",
+    cluster_name: "Singur / Hooghly Cluster",
+    total_farmers: 5,
+    total_farmers_assisted: 3,
+    total_produce_kg: 1200,
+    active_pools: 1,
+    pending_confirmations: 2,
+    completed_shipments: 1
+  },
+  "/coordinator/farmers": [
+    { id: 1, user_id: 2, name: "Ramesh Das (demo)", phone: "9000000001", village: "Singur", lat: 22.81, lng: 88.228, phone_type: "feature_phone", preferred_language: "bn", assisted_by_coordinator: true, listings_count: 1, total_kg: 250 },
+    { id: 2, user_id: 3, name: "Sukumar Pal (demo)", phone: "9000000002", village: "Dhaniakhali", lat: 22.98, lng: 88.05, phone_type: "smartphone", preferred_language: "bn", assisted_by_coordinator: false, listings_count: 1, total_kg: 300 },
+    { id: 3, user_id: 4, name: "Anita Mondal (demo)", phone: "9000000003", village: "Haripal", lat: 22.868, lng: 88.093, phone_type: "smartphone", preferred_language: "hi", assisted_by_coordinator: false, listings_count: 1, total_kg: 200 },
+    { id: 4, user_id: 5, name: "Bimal Ghosh (demo)", phone: "9000000004", village: "Bandel", lat: 22.928, lng: 88.378, phone_type: "feature_phone", preferred_language: "hi", assisted_by_coordinator: true, listings_count: 1, total_kg: 250 },
+    { id: 5, user_id: 6, name: "Kabita Roy (demo)", phone: "9000000005", village: "Balagarh", lat: 23.008, lng: 88.44, phone_type: "smartphone", preferred_language: "bn", assisted_by_coordinator: false, listings_count: 1, total_kg: 200 },
+  ],
+  "/ivr/demo-farmers": [
+    { id: 1, name: "Ramesh Das (demo)", phone: "9000000001", village: "Singur", phone_type: "feature_phone", preferred_language: "bn" },
+    { id: 2, name: "Sukumar Pal (demo)", phone: "9000000002", village: "Dhaniakhali", phone_type: "smartphone", preferred_language: "bn" },
+    { id: 4, name: "Bimal Ghosh (demo)", phone: "9000000004", village: "Bandel", phone_type: "feature_phone", preferred_language: "hi" },
   ]
 };
 

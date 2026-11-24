@@ -3,7 +3,7 @@ import { cacheGet, cacheSet, queueOfflineAction, isOnline, QueuedAction } from "
 export const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type J = any;
-export type Session = { token: string; role: "farmer" | "buyer" | "admin" };
+export type Session = { token: string; role: "farmer" | "buyer" | "admin" | "coordinator" };
 
 export const getSession = (): Session | null => {
   if (typeof window === "undefined") return null;

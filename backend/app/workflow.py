@@ -13,6 +13,7 @@ from .engines.pooling import build_pool, Listing, Requirement, VehicleSpec
 from .engines import economics as eco
 from .engines import routing
 from .config import settings
+from .services.sms import SMSService
 
 router = APIRouter(prefix="/api")
 A = Role.admin
@@ -63,6 +64,11 @@ def propose_pool(rid: int, user=Depends(require_role(Role.buyer, A)), db: Sessio
         {"order": vr.stop_ids, "legs_km": vr.leg_km, "source": rr.distance_source, "vehicle": vr.vehicle_name})))
     r.status = OrderStatus.pool_proposed
     db.commit()
+    # Trigger SMS notification simulation to invited farmers
+    try:
+        SMSService.notify_pool_proposed(db, pool, r, db.query(PoolMember).filter_by(pool_id=pool.id).all())
+    except Exception as e:
+        pass
     return {"feasible": True, "pool_id": pool.id, "ship_date": res.ship_date, "route_km": rr.total_km, "transport_cost": rr.total_cost,
             "vehicle": vr.vehicle_name, "distance_source": rr.distance_source, "quick_estimate_km": res.est_route_km,
             "members": [asdict(m) for m in res.members], "excluded": res.excluded}
@@ -99,6 +105,10 @@ def confirm(rid: int, user=Depends(require_role(Role.buyer)), db: Session = Depe
         db.add(Transaction(order_id=order.id, farmer_id=l.farmer_id, gross=b.revenue, deductions=round(b.revenue - b.net, 2), net=b.net))
     pool.status = "Confirmed"; r.status = OrderStatus.confirmed
     db.commit()
+    try:
+        SMSService.notify_order_confirmed(db, order, pool)
+    except Exception:
+        pass
     return {"order_id": order.id, "status": order.status.value}
 
 @router.post("/shipments/{sid}/advance")
@@ -110,6 +120,10 @@ def advance(sid: int, user=Depends(require_role(A)), db: Session = Depends(get_d
     o = db.get(Order, s.order_id); r = db.get(BuyerRequirement, o.requirement_id)
     s.status = o.status = r.status = nxt
     db.commit()
+    try:
+        SMSService.notify_shipment_advance(db, s, nxt.value)
+    except Exception:
+        pass
     return {"status": nxt.value}
 
 @router.get("/pools/{pid}/profit")

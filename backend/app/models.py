@@ -7,7 +7,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .db import Base
 
 class Role(str, enum.Enum):
-    farmer = "farmer"; buyer = "buyer"; admin = "admin"
+    farmer = "farmer"; buyer = "buyer"; admin = "admin"; coordinator = "coordinator"
 
 class OrderStatus(str, enum.Enum):
     open = "Open"; matching = "Matching"; pool_proposed = "Pool Proposed"
@@ -30,6 +30,18 @@ class Farmer(Base):
     village: Mapped[str] = mapped_column(String(120))
     lat: Mapped[float] = mapped_column(Float)
     lng: Mapped[float] = mapped_column(Float)
+    phone_type: Mapped[str] = mapped_column(String(30), default="smartphone")  # smartphone, feature_phone, no_phone
+    assisted_by_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    preferred_language: Mapped[str] = mapped_column(String(10), default="hi")  # hi, bn, en
+    user: Mapped[User] = relationship(foreign_keys=[user_id])
+    assisted_by: Mapped[User | None] = relationship(foreign_keys=[assisted_by_id])
+
+class Coordinator(Base):
+    __tablename__ = "coordinators"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    cluster_name: Mapped[str] = mapped_column(String(120), default="Singur / Hooghly Cluster")
+    assigned_villages: Mapped[str] = mapped_column(String(500), default="Singur,Dhaniakhali,Haripal,Bandel,Balagarh")
     user: Mapped[User] = relationship()
 
 class Buyer(Base):
@@ -49,7 +61,11 @@ class HarvestListing(Base):
     harvest_date: Mapped[date] = mapped_column(Date)
     preferred_sell_date: Mapped[date | None] = mapped_column(Date, nullable=True)
     committed: Mapped[bool] = mapped_column(Boolean, default=False)
-    farmer: Mapped[Farmer] = relationship()
+    source: Mapped[str] = mapped_column(String(40), default="smartphone")  # smartphone, ivr, coordinator, offline
+    created_by_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    client_request_id: Mapped[str | None] = mapped_column(String(64), nullable=True, unique=True)
+    farmer: Mapped[Farmer] = relationship(foreign_keys=[farmer_id])
+    created_by: Mapped[User | None] = relationship(foreign_keys=[created_by_id])
 
 class BuyerRequirement(Base):
     __tablename__ = "buyer_requirements"
@@ -104,6 +120,21 @@ class PoolMember(Base):
     kg_contributed: Mapped[float] = mapped_column(Float)
     reason: Mapped[str] = mapped_column(String(500), default="")
     accepted: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
+    consent_mode: Mapped[str | None] = mapped_column(String(60), nullable=True)  # app_click, ivr_keypad, coordinator_verbal, sms_reply
+    responded_by_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+
+class Notification(Base):
+    __tablename__ = "notifications"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    phone: Mapped[str] = mapped_column(String(20))
+    channel: Mapped[str] = mapped_column(String(20))  # "sms" or "voice"
+    type: Mapped[str] = mapped_column(String(40))     # "buyer_offer", "pool_confirmed", "pickup_schedule", "transport_update", "delivery", "payment"
+    message: Mapped[str] = mapped_column(String(1000))
+    related_pool_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    status: Mapped[str] = mapped_column(String(20), default="sent")  # "sent", "delivered", "replied"
+    reply_text: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
 class TransportRoute(Base):
     __tablename__ = "transport_routes"

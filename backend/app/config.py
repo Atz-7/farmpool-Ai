@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     token_minutes: int = 720
     gemini_api_key: str = ""  # server-side only, never sent to frontend
     gemini_model: str = "gemini-2.5-flash"
+    cors_origins: str = "http://localhost:3000"
     osrm_url: str = ""  # e.g. https://router.project-osrm.org ; empty = use offline estimate
     class Config:
         env_file = ".env"
