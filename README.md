@@ -3,7 +3,7 @@
 **Turning individual harvests into collective market power.**
 
 **🔗 Live demo:** https://farmpool-ai.vercel.app
-**⚙️ API:** https://farmpool-api.onrender.com (docs at `/docs`)
+**⚙️ API:** https://farmpool-api.onrender.com/api/health
 
 *Demo logins are listed below. The backend runs on a free tier, so the very first load can take up to a minute to wake up. The login page shows a "Waking up the server" message while it does.*
 
