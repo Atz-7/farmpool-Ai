@@ -97,6 +97,7 @@ The IVR, coordinator and SMS screens show how those channels would work. They ar
 - **AI:** Gemini API (optional)
 - **Hosting:** Vercel (frontend), Render (backend), Neon PostgreSQL (database, optional)
 - **Routing data:** straight-line × 1.3 estimate by default, or live road distances via OSRM (OpenStreetMap)
+- **Covexcode:** Parts of this project were built and improved using Covexcode
 
 ## Project structure
 
