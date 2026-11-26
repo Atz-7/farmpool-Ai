@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { api, setSession, J } from "@/lib/api";
 import { Card, Field, Btn, Err, Demo } from "@/components/ui";
@@ -52,18 +52,26 @@ export default function Login() {
   const [pw, setPw] = useState("");
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
+  const [slow, setSlow] = useState(false);
   const [lang, setL] = useState<Lang>("hi");
+  const slowTimer = useRef<number | null>(null);
 
   useEffect(() => {
     setL(getLang());
     const onLang = () => setL(getLang());
     window.addEventListener("fp_lang_change", onLang);
-    return () => window.removeEventListener("fp_lang_change", onLang);
+    return () => {
+      window.removeEventListener("fp_lang_change", onLang);
+      if (slowTimer.current) window.clearTimeout(slowTimer.current);
+    };
   }, []);
 
   const go = async (u: string, p: string, fallbackRole?: string) => {
     setBusy(true);
     setErr("");
+    setSlow(false);
+    // The free-tier backend sleeps; reassure first-time visitors after 5s.
+    slowTimer.current = window.setTimeout(() => setSlow(true), 5000);
     try {
       const t: J = await api("/auth/login", { form: { username: u, password: p } });
       setSession({ token: t.access_token, role: t.role });
@@ -74,12 +82,26 @@ export default function Login() {
       setSession({ token: "offline-demo-token", role: role as any });
       router.push(`/${role}`);
     } finally {
+      if (slowTimer.current) window.clearTimeout(slowTimer.current);
+      slowTimer.current = null;
+      setSlow(false);
       setBusy(false);
     }
   };
 
   return (
     <div className="mx-auto max-w-lg space-y-5">
+      {slow && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="flex items-center gap-2 rounded-xl border-2 border-amber-300 bg-amber-50 p-3.5 text-sm font-semibold text-amber-900"
+        >
+          <span className="text-lg">⏳</span>
+          <span>Waking up the server, please wait up to a minute…</span>
+        </div>
+      )}
+
       {/* Quick 1-Tap Demo Access */}
       <Card
         title="एक टच से डेमो खोलें (Quick 1-Tap Access)"
