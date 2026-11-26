@@ -2,6 +2,11 @@
 
 **Turning individual harvests into collective market power.**
 
+**🔗 Live demo:** https://farmpool-ai.vercel.app
+**⚙️ API:** https://farmpool-api.onrender.com (docs at `/docs`)
+
+*Demo logins are listed below. The backend runs on a free tier, so the very first load can take up to a minute to wake up. The login page shows a "Waking up the server" message while it does.*
+
 An AI-assisted, demand-first agricultural procurement and logistics platform built by **Team Shuriken**.
 
 > Farmers don't necessarily earn less because they grow less. They often earn less because they sell alone.
@@ -9,15 +14,6 @@ An AI-assisted, demand-first agricultural procurement and logistics platform bui
 FarmPool AI starts from what a **buyer needs**, not from a farmer's listing. It finds the farmers who can actually fulfil the order on time, groups them into a pool, plans one shared shipment, and shows every farmer their own **net earnings** before they confirm.
 
 > ⚠️ **Demo project.** All farmers, buyers, mandi prices and payouts are **synthetic demo data**. There is no live e-NAM, government or payment integration. Earnings are estimates only.
-
-**🔗 Live prototype: https://farmpool-ai.vercel.app/
-*(Backend runs on a free tier. The first load may take about 50 seconds to wake up.)*
-
-**🔗 PPT Link: https://drive.google.com/file/d/13_2mNQxGYCBoB_6byLlYY04VOU2XQAwO/view?usp=sharing
-
-**🔗 Video Link: https://drive.google.com/file/d/1cyn23wRaS6oOThJaFmRacQiO8Mc8gc9f/view?usp=sharing
-
-**🔗 Medium Post: https://medium.com/@shagunshaw2006/farmpool-ai-turning-individual-harvests-into-collective-market-power-6857e7d3f89c
 
 ---
 
@@ -58,6 +54,10 @@ If an order can't be fulfilled, the engine **explains why** (for example, "insuf
 | **Pool page** | "Why these farmers" reasons, route map (Leaflet) and a schematic 3D pickup run (Three.js) |
 | **Order workflow** | Open → Matching → Pool Proposed → Awaiting Confirmation → Confirmed → In Transit → Delivered |
 | **Admin dashboard** | Listings, orders and summary view |
+| **Multilingual UI** | Hindi, Bengali and English, with "Listen" (read-aloud) buttons and a sack-based quantity selector for farmers |
+| **Offline-first listings** | A harvest listing submitted without internet is saved on the device and synced automatically when the connection returns. A badge shows how many are waiting, and duplicate sends are blocked by the backend |
+| **Inclusive-access screens** | In-app IVR-call, village-coordinator and SMS views that simulate the feature-phone and coordinator flows from the pitch |
+| **Server wake-up notice** | The login page tells first-time visitors when the free-tier server is waking up |
 
 ### Example: highest price isn't always highest profit
 
@@ -75,16 +75,18 @@ If an order can't be fulfilled, the engine **explains why** (for example, "insuf
 
 ## Implemented vs. planned
 
-| Implemented | Simulated / planned |
-|---|---|
-| Farmer, buyer and admin web interfaces (Next.js) | Feature-phone / IVR with missed-call callback |
-| FastAPI backend and REST API | Village-coordinator workflow |
-| Pooling, harvest-window, routing and economics engines | Offline-first mode with sync |
-| Profit simulator and order workflow | SMS notifications and payments |
-| Map and 3D pickup-run view | Live mandi / e-NAM price feeds |
-| Gemini-assisted listing entry | Farmer location map-picker |
+| Implemented | Simulated (in-app demo) | Planned |
+|---|---|---|
+| Farmer, buyer and admin web interfaces (Next.js) | IVR-call screen (no real telephony) | Real feature-phone IVR with missed-call callback |
+| FastAPI backend and REST API | Village-coordinator screen | Full coordinator workflow tied to real farmers |
+| Pooling, harvest-window, routing and economics engines | SMS screen (no real SMS sent) | Real SMS notifications and payments |
+| Profit simulator and order workflow | | Live mandi / e-NAM price feeds |
+| Map and 3D pickup-run view | | Farmer location map-picker |
+| Offline listing queue with auto-sync | | |
+| Hindi / Bengali / English UI with read-aloud | | |
+| Gemini-assisted listing entry | | |
 
-The IVR, missed-call callback and offline channels are part of the product vision. They are **not** built unless telecom integration is added.
+The IVR, coordinator and SMS screens show how those channels would work. They are **not** connected to a telecom provider, so no real calls or messages are made.
 
 ## Tech stack
 
@@ -93,6 +95,7 @@ The IVR, missed-call callback and offline channels are part of the product visio
 - **Optimisation:** Google OR-Tools
 - **Database:** SQLite by default, or PostgreSQL + PostGIS via Docker
 - **AI:** Gemini API (optional)
+- **Hosting:** Vercel (frontend), Render (backend), Neon PostgreSQL (database, optional)
 - **Routing data:** straight-line × 1.3 estimate by default, or live road distances via OSRM (OpenStreetMap)
 
 ## Project structure
@@ -114,9 +117,9 @@ farmpool/
 │   │       └── geo.py             # distance estimates / OSRM
 │   └── tests/
 ├── frontend/
-│   ├── app/                   # pages: login, register, farmer, buyer, admin, orders, pool/[id]
+│   ├── app/                   # pages: login, register, farmer, buyer, admin, orders, pool/[id], ivr, coordinator
 │   ├── components/            # Nav, RouteMap, Pool3D, ProfitChart, Stepper, ui
-│   └── lib/                   # API client, hooks, 3D scene helpers
+│   └── lib/                   # API client, hooks, 3D scene helpers, offline listing queue
 ├── db/init.sql                # enables PostGIS (Docker)
 ├── docker-compose.yml         # optional PostGIS database
 └── DEMO_SCRIPT.md             # 5-minute demo walkthrough
@@ -216,12 +219,34 @@ Interactive docs are at `/docs`. Main endpoints:
 | POST | `/api/ai/parse-listing` | Gemini-assisted listing parse |
 | GET | `/api/admin/summary` | Admin dashboard data |
 
+## Deployment
+
+| Part | Where | Notes |
+|---|---|---|
+| Frontend | Vercel (root directory `frontend`) | Set `NEXT_PUBLIC_API_URL` to the backend URL |
+| Backend | Render (`render.yaml` blueprint, root directory `backend`) | Set `CORS_ORIGINS` to the frontend URL and `JWT_SECRET` to a long random string |
+| Database | SQLite by default, or Neon PostgreSQL | Set `DATABASE_URL` to `postgresql+psycopg://...` to keep data across restarts |
+
+Pushes to `main` redeploy both services automatically. An uptime monitor pings `/api/health` every 5 minutes so the free-tier backend stays awake.
+
+## Built with Covexcode
+
+Parts of this project were built and improved using **Covexcode** (model: `deepseek-v4-flash`) through the HACK WITH DELHI 4.0 credits:
+
+- **Offline listing queue** (`frontend/lib/listingQueue.ts` and the farmer page): listings are saved locally when offline and synced when the connection returns.
+- **Server wake-up notice** on the login page for the free-tier cold start.
+
+The commits for these changes name Covexcode in their messages.
+
 ## Known limitations
 
 - All prices, farmers and buyers are synthetic.
 - Pooling is not always better. The advantage depends on the buyer's price versus the mandi price and on how much transport is shared. The app shows when pooling loses and says so.
 - Distances are straight-line × 1.3 estimates unless `OSRM_URL` is set. The 3D view is schematic.
 - One shared vehicle per pool. Transport cost is split by kg, not by detour.
+- The IVR, coordinator and SMS screens are simulations. No real calls or SMS are sent.
+- The offline queue covers harvest listings. Other actions still need a connection.
+- On the free hosting tier the first request after a long idle period can take up to a minute.
 - Harvest-window values (hold days, transit hours) and fee rates are configurable assumptions, not guaranteed shelf life or real rates.
 
 ## Team
