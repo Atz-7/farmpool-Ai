@@ -13,6 +13,15 @@ import OfflineBanner from "@/components/OfflineBanner";
 import AudioGuideBtn from "@/components/AudioGuideBtn";
 import { getLang, t, CROPS_META, Lang } from "@/lib/i18n";
 import { parseVoiceHarvestOffline, speakText } from "@/lib/voice";
+import {
+  QUEUE_EVENT,
+  QueuedListingBody,
+  queueListing,
+  queuedListingCount,
+  syncQueuedListings,
+} from "@/lib/listingQueue";
+
+const OFFLINE_SAVED_MSG = "Saved offline. It will sync when you're back online.";
 
 export default function Farmer() {
   const s = useRole(["farmer"]);
@@ -30,6 +39,8 @@ export default function Farmer() {
   const [cmp, setCmp] = useState<Record<number, J>>({});
   const [err, setErr] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
+  const [queuedCount, setQueuedCount] = useState(0);
+  const syncingRef = useRef(false);
 
   // Default harvest form
   const tomorrowStr = new Date(Date.now() + 86400000).toISOString().split("T")[0];
@@ -119,22 +130,81 @@ export default function Farmer() {
     }
   };
 
+  // Replay listings saved while offline, through the same POST /listings call.
+  const syncQueued = async () => {
+    if (syncingRef.current) return;
+    if (typeof navigator === "undefined" || !navigator.onLine) return;
+    if (queuedListingCount() === 0) return;
+
+    syncingRef.current = true;
+    try {
+      const n = await syncQueuedListings((body) => api("/listings", { body }));
+      setQueuedCount(queuedListingCount());
+      if (n > 0) {
+        setSuccessMsg(`Synced ${n} listing(s)`);
+        listings.reload();
+      }
+    } catch (e) {
+      setErr((e as Error).message);
+    } finally {
+      syncingRef.current = false;
+    }
+  };
+
+  useEffect(() => {
+    setQueuedCount(queuedListingCount());
+
+    const onOnline = () => syncQueued();
+    const onQueueChange = () => setQueuedCount(queuedListingCount());
+
+    window.addEventListener("online", onOnline);
+    window.addEventListener(QUEUE_EVENT, onQueueChange);
+
+    // Also try on load, in case the page was opened while already online.
+    syncQueued();
+
+    return () => {
+      window.removeEventListener("online", onOnline);
+      window.removeEventListener(QUEUE_EVENT, onQueueChange);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const addHarvest = async () => {
     setErr("");
     setSuccessMsg("");
+
+    const requestId = "req_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
+    const body: QueuedListingBody = {
+      crop: f.crop,
+      quantity_kg: parseFloat(f.quantity_kg),
+      quality: f.quality,
+      harvest_date: f.harvest_date,
+      preferred_sell_date: f.preferred_sell_date || null,
+      client_request_id: requestId,
+      source: navigator.onLine ? "smartphone" : "offline",
+    };
+
+    // No signal: keep the listing on the phone instead of showing an error.
+    if (typeof navigator !== "undefined" && !navigator.onLine) {
+      queueListing(body);
+      setQueuedCount(queuedListingCount());
+      setSuccessMsg(OFFLINE_SAVED_MSG);
+      speakText("आपकी फसल फ़ोन में सुरक्षित है। इंटरनेट आने पर अपने आप भेज दी जाएगी।", lang);
+      return;
+    }
+
     try {
-      const requestId = "req_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
-      await api("/listings", {
-        body: {
-          crop: f.crop,
-          quantity_kg: parseFloat(f.quantity_kg),
-          quality: f.quality,
-          harvest_date: f.harvest_date,
-          preferred_sell_date: f.preferred_sell_date || null,
-          client_request_id: requestId,
-          source: navigator.onLine ? "smartphone" : "offline",
-        },
-      });
+      const saved = await api<J>("/listings", { body });
+
+      // lib/api.ts swallows a network failure and returns an optimistic listing
+      // marked is_offline: queue that one too so it is retried on reconnect.
+      if (saved && saved.is_offline === true) {
+        queueListing(body);
+        setQueuedCount(queuedListingCount());
+        setSuccessMsg(OFFLINE_SAVED_MSG);
+        return;
+      }
 
       const cropName = CROPS_META[f.crop]?.[lang] || f.crop;
       const confirmText = `${f.quantity_kg} किलो ${cropName} सुरक्षित दर्ज हो गया!`;
@@ -434,6 +504,13 @@ export default function Farmer() {
 
           {/* Submit Button */}
           <div className="pt-2">
+            {queuedCount > 0 && (
+              <div className="mb-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-300 bg-amber-100 px-2.5 py-1 text-xs font-bold text-amber-900">
+                  📡 {queuedCount} listing{queuedCount === 1 ? "" : "s"} waiting
+                </span>
+              </div>
+            )}
             <Btn
               big
               variant="harvest"
